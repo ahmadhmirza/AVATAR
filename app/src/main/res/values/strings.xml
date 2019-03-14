@@ -1,0 +1,35 @@
+<resources xmlns:xlif="http://schemas.android.com/tools">
+    <string name="app_name">Facial Landmark Detection</string>
+    <string name="title">Project Avatar: FLD ver 2.5</string>
+    <string name="version_goal">Facial Landmarks Detection</string>
+
+    <string name="btn_load_image">Load Image</string>
+    <string name="btn_start_process">Process Image</string>
+    <string name="btn_rotate">Rotate Image</string>
+    <string name="btn_switch_image">S.I</string>
+    <string name="btn_save_image">Save Image</string>
+
+    <string name="title_activity_photo_viewer">Photo Viewer</string>
+    <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
+
+    <string-array name="img_proc_options_array">
+        <item>Canny Edge Detection</item>
+        <item>Face Detection</item>
+        <item>Landmark Detection</item>
+        <item>68 Landmarks Detection</item>
+    </string-array>
+
+    <string name="toast_load_img">Load an image first!</string>
+    <string name="toast_img_saved">Image Saved!</string>
+    <string name="toast_canny_done">Cannied!</string>
+    <string name="toast_facedetection_done">Detected <xlif:g example="3" id="toast_facedetection_done">%d</xlif:g> face(s).</string>
+    <string name="toast_process_failed">Failed!</string>
+    <string name="toast_shapemodel_404">Shape Model not found, Downloading file now...</string>
+    <string name="toast_shapemodel_found">Shape Model found in Downloads Directory</string>
+    <string name="toast_shapemodel_found_URI">Shape Model found in Local Directory</string>
+    <string name="toast_shapemodel_downloading">Download in progress...</string>
+    <string name="toast_shapemodel_downloaded">Shape Model Downloaded successfully</string>
+
+    <string name="Dlib_Activity_start">68 Landmarks Detection using dlib!</string>
+
+</resources>
