@@ -30,6 +30,9 @@ import com.example.android.faciallandmarkdetection.R;
 import com.tzutalin.dlib.FaceDet;
 import com.tzutalin.dlib.VisionDetRet;
 
+import org.opencv.android.Utils;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 
 import java.io.File;
@@ -165,7 +168,6 @@ public class DetectLandmarks {
         List<VisionDetRet> faceList = mFaceDet.detect(bm);
         // ... Add split in timing with label Face Detection ...
         //timing.addSplit("Face Detection Done");
-
         bm = bitmapOperations(bm);
 
         //********************************************************************************
@@ -189,11 +191,13 @@ public class DetectLandmarks {
         int i = 0;
         for (VisionDetRet ret : faceList) {
             Rect bounds = new Rect();
-            bounds.left = (int) (ret.getLeft() * mResizeRatio);
+
+/*            bounds.left = (int) (ret.getLeft() * mResizeRatio);
             bounds.top = (int) (ret.getTop() * mResizeRatio);
             bounds.right = (int) (ret.getRight() * mResizeRatio);
             bounds.bottom = (int) (ret.getBottom() * mResizeRatio);
-            canvas.drawRect(bounds, paint);
+            canvas.drawRect(bounds, paint);*/
+
             // Detect landmarks on the detected faces
             ArrayList<Point> landmarks = ret.getFaceLandmarks();
             for (Point point : landmarks) {
@@ -202,11 +206,17 @@ public class DetectLandmarks {
                 int pointY = (int) (point.y * mResizeRatio);
                 if(i>=49 && i <= 68){
                     paint.setColor(Color.RED);
-                    double x= calculateDistance(landmarks.get(64).x,landmarks.get(64).y,
+                    double x= calculateDistance(landmarks.get(63).x,landmarks.get(63).y,
                             landmarks.get(67).x,landmarks.get(67).y);
-                    Log.d("Distance 63,67: ",String.format("%.2f", x));
+
+                    Log.d("point 63: ", (landmarks.get(63).x) +", "+
+                            (landmarks.get(63).y) );
+                    Log.d("point 67: ", (landmarks.get(67).x) +", "+
+                            (landmarks.get(67).y) );
+                    Log.d("Distance 64,67: ",String.format("%.2f", x));
+                    
                 }
-                if(i == 69){ 
+                if(i == 69){
 
                     paint.setColor(Color.GREEN);
                 }
@@ -322,7 +332,8 @@ public class DetectLandmarks {
     }
 
     private Double calculateDistance(int x1, int y1, int x2, int y2){
-        double x =Math.sqrt((x2-x1)^2 + (y2-y1)^2);
+        int dist = (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) ;
+        double x =Math.sqrt(dist);
         return x;
 
     }

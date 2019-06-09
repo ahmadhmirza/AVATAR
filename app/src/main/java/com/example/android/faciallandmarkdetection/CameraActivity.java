@@ -40,6 +40,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 
+import static org.opencv.core.CvType.CV_8UC4;
+
 public class CameraActivity extends Activity implements CvCameraViewListener2 {
     private static final String TAG = "OCVSample::Activity";
     private static CascadeClassifier classifier;
@@ -48,12 +50,14 @@ public class CameraActivity extends Activity implements CvCameraViewListener2 {
     private boolean              mIsJavaCamera = true;
     private MenuItem             mItemSwitchCamera = null;
     Mat mRGBA;
+    Mat mGray;
     FaceDetection faceDetector;
     private int absoluteFaceSize;
     private MatOfRect faceDetections = new MatOfRect();
     private Mat grayscaleImage = new Mat();
     private Mat inputFrameProcessed = new Mat();
     private int frameCount= 0;
+    private int frameSkipCount=20; //How many frames to skip for facedetection
     private ImageView imageCanvas;
     private boolean process = false;
     private DetectLandmarks landmarkDetector;
@@ -61,6 +65,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2 {
     private Rect faceRoi;
     //Bitmaps declarations
     private Bitmap processedImage;
+    private Mat processedImageMat;
     private Bitmap croppedFaceImage;
 
     private int MAX_WIDTH = 800;
@@ -135,7 +140,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2 {
     }
 
     public void onCameraViewStarted(int width, int height) {
-        mRGBA = new Mat(height, width, CvType.CV_8UC4);
+        mRGBA = new Mat(height, width, CV_8UC4);
+        mGray = new Mat(height, width, CV_8UC4);
         faceDetector = new FaceDetection(this, mRGBA);
 
         //Bitmap must be initialized like this before using it in the code, otherwise android throws
@@ -152,15 +158,18 @@ public class CameraActivity extends Activity implements CvCameraViewListener2 {
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         //return faceDetection(inputFrame.rgba());
         mRGBA =  inputFrame.rgba();
+        mGray = inputFrame.gray();
         //faceDetection(mRGBA);
         if(process){
+
             faceDetection(mRGBA);
-            //detectLandmarks(mRGBA);
             detectLandmarks2(mRGBA);
-            //process = false;
+
         }
+        //Mat x=new Mat();
+       // Utils.bitmapToMat(processedImage,x);
         //return faceDetection(mRGBA);
-        return inputFrame.rgba();
+        return inputFrame.gray();
     }
 
     /**
@@ -204,31 +213,31 @@ public class CameraActivity extends Activity implements CvCameraViewListener2 {
             }
         }
 
-        else if(frameCount >0 && frameCount <= 2){
+        else if(frameCount >0 && frameCount <= frameSkipCount){
             frameCount++;
 
             for (Rect rect : faceDetections.toArray()) {
-                Imgproc.rectangle(
+/*                Imgproc.rectangle(
                         inputFrame,                                               // where to draw the box
                         new Point(rect.x, rect.y),                            // bottom left
                         new Point(rect.x + rect.width, rect.y + rect.height), // top right
                         new Scalar(0, 0, 255),                 // RGB colour and thickness of the box
                         1
-                );
+                );*/
                 setFaceRoi(rect);
             }
             return inputFrame;
         }
-        else if(frameCount== 3 ){
+        else if(frameCount == frameSkipCount+1 ){
             frameCount = 0;
             for (Rect rect : faceDetections.toArray()) {
-                Imgproc.rectangle(
+/*                Imgproc.rectangle(
                         inputFrame,                                               // where to draw the box
                         new Point(rect.x, rect.y),                            // bottom left
                         new Point(rect.x + rect.width, rect.y + rect.height), // top right
                         new Scalar(0, 0, 255),                 // RGB colour and thickness of the box
                         1
-                );
+                );*/
                 setFaceRoi(rect);
             }
             return inputFrame;
@@ -318,7 +327,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2 {
             Utils.matToBitmap(cropped,croppedFaceImage);
             processedImage = landmarkDetector.detFacesFromBitmap(croppedFaceImage);
 
-
             Log.v("Size of inputframe: ", inputFrame.size().toString());
             Log.v("Size of ROI: ", faceROI.toString());
         }
@@ -338,6 +346,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2 {
         });
 
     }
+
 
     public Rect getFaceRoi() {
         return faceRoi;
