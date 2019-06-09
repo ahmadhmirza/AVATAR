@@ -206,7 +206,7 @@ public class DetectLandmarks {
                             landmarks.get(67).x,landmarks.get(67).y);
                     Log.d("Distance 63,67: ",String.format("%.2f", x));
                 }
-                if(i == 69){
+                if(i == 69){ 
 
                     paint.setColor(Color.GREEN);
                 }
