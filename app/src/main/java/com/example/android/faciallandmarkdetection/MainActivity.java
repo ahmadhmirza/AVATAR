@@ -5,40 +5,18 @@
  * ahmadhasanmirza@gmail.com
  *
  * Version Summary:
- * Ver 1.0
- *      Load image from memory
- *      Canny Algorithm for edge detection
- *      Face Detection
- *      Option to choose which processing method to use
- *      Rotate Image
- * Ver 1.1
- *      Fix for rotation problem
- *      Localization of string resources
- *      Updated JavaDoc
- *
- * Ver 2.0
- *      Facial Landmark detection using Google's Mobile Vision API
- *
- * Ver 2.5
- *      Integration of dlib
- *      Downloading and Handling of the shape_predictor_68_face_landmarks.dat
- *
- *  Ver 2.5.1
- *      Add a label to the landmarks and a message for Identified and missed landmarks - Vision API
- *      ID missing landmarks.
  *
  *  Ver 2.6
-
  *      Handling for passing the downloaded landmarks model and the bitmap image from java layer to C++ layer.
  *      Facial and Landmark detection using dlib
  *      Select image from gallery for processing.
  *      Implementation of TimingLogger to DlibLandmarksActivity for performance measurements.
  *      UI updates
- *
- *  Ver 3.0
  *      TODO : Add more checks so the shape model file is not downloaded repeatedly.
  *      TODO : Add dialogue for "processing image" time.
  *      TODO : Update JavaDoc, and arrange code.
+ *
+ *  Ver 3.0
  */
 
 package com.example.android.faciallandmarkdetection;
@@ -58,7 +36,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.android.faciallandmarkdetection.MvUtils.DetectLandmarks;
 
 import org.opencv.android.OpenCVLoader;
 
@@ -82,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     Bitmap bitmap; // to hold the original image temporarily
     Spinner spinner; // Dropdown menu for operation selection
     private Uri imgURI;
+    private TextView debugMsgs;
 
 
     public static boolean onCanvas=false; // To hold the status of the image on canvas
@@ -94,7 +76,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FaceDetection faceDetector = new FaceDetection(this);  // for context
-        populateSpinner();
+
+        debugMsgs = findViewById(R.id.debug_messages);
+
     }
 
     //*****OpenCV Initialization ********//
@@ -107,30 +91,9 @@ public class MainActivity extends AppCompatActivity {
     }
     //***************************************************************************************
 
-    /**
-     *  This method populates the options in the dropdown menu from the string resources.
-     *  The drop-down menu (spinner) gives user the choice to select which
-     *  processing algorithm to apply on the image
-     **/
-
-    public void populateSpinner(){
-        //**********Initialize the Spinner*************************
-        spinner = findViewById(R.id.spinner1);
-
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.img_proc_options_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new ProcessingOptionsSpinner());
-        //*********************************************************
-
-    }
 
 
-    public void onClick(View v) {
+    public void loadImage(View v) {
         int requestCode = GALLERY;
         choosePhotoFromGallery();
     }
@@ -155,25 +118,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickProcessImage(View v){
-        Resources res = getResources();
-        String[] processList = res.getStringArray(R.array.img_proc_options_array);
+        if (imgLoaded) {
+            //startDlibActivity();
+            DetectLandmarks landmarkDetector = new DetectLandmarks(this, imgToProcess);
 
-        String Process = String.valueOf(spinner.getSelectedItem());
+            imgProcessed = landmarkDetector.detFaces();
 
-        if (imgLoaded==true) {
-
-            if (Process.matches(processList[0])) {
-                edgeDetection();
-            }
-            if (Process.matches(processList[1])) {
-                faceDetection();
-            }
-            if (Process.matches(processList[2])) {
-                landmarkDetection();
-            }
-            if(Process.matches(processList[3]) ) {
-                startDlibActivity();
-            }
+            //imgProcessed = landmarkDetector.detectFaceROI();
+            displayImage(imgProcessed);
+            toggleCanvasStatus();
         }
         else{
             showLoadImageToast();
@@ -181,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickSwitchImage(View v){
-        if (imgLoaded==true) {
+        if (imgLoaded) {
             switchImage();
         }
         else{
@@ -190,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickSaveImageToDir(View v) {
-        if (imgLoaded == true) {
+        if (imgLoaded) {
             if (onCanvas) {
                 pathProcessed = saveImage(imgProcessed);
             } else {
@@ -419,27 +372,6 @@ public class MainActivity extends AppCompatActivity {
         //displayImage(b);
 
     }
-
-    /**
-     * Uses the EdgeDetection class to perform edge detection using Canny Algorithm
-     */
-    public void edgeDetection() {
-
-        EdgeDetection edgeDetect = new EdgeDetection();
-        edgeDetect.setImgToProcess(bitmap);
-        edgeDetect.detectEdges();
-        imgProcessed = edgeDetect.getProcessedImg();
-
-        Toast.makeText(MainActivity.this, R.string.toast_canny_done, Toast.LENGTH_SHORT).show();
-        //imageView.setImageBitmap(imgProcessed);
-
-        displayImage(imgProcessed);
-        toggleCanvasStatus();
-
-
-
-    }
-
     /**
      * Uses the FaceDetection Class to perform face detection
      */
@@ -458,18 +390,7 @@ public class MainActivity extends AppCompatActivity {
         displayImage(imgProcessed);
         toggleCanvasStatus();
     }
-    /**
-     * Uses the MvLandmarkDetection Class to perform face detection and facial landmarks detection
-     */
-    public void landmarkDetection(){
-        Uri tempURI = imgURI;
-        String message = tempURI.toString();
 
-        Intent intent = new Intent(MainActivity.this, MvLandmarkDetection.class);
-        //intent.putExtra("BitmapImage", bitmap);
-        intent.putExtra(EXTRA_MESSAGE,message);
-        MainActivity.this.startActivity(intent);
-    }
     /**
      * Uses the DlibLandmarksActivity class to perform facial landmarks detection using Dlib
      * and JNI
@@ -482,6 +403,11 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_MESSAGE,message);
         startActivity(intent);
 
+    }
+
+    public void onClickTestFlight(View v){
+        Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+        MainActivity.this.startActivity(intent);
     }
 }
 

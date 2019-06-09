@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:text="@string/title"/>
         <TextView
+            android:id="@+id/debug_messages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/version_goal" />
@@ -30,11 +31,6 @@
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="center"
             />
-        <Spinner
-            android:id="@+id/spinner1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -43,12 +39,12 @@
             android:paddingRight="16dp"
             android:orientation="horizontal" >
             <Button
-                android:id="@+id/btn"
+                android:id="@+id/load_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/btn_load_image"
-                android:onClick="onClick"/>
+                android:onClick="loadImage"/>
             <Button
                 android:id="@+id/edge_detect"
                 android:layout_width="wrap_content"
@@ -85,5 +81,12 @@
             android:text="@string/btn_save_image"
             android:onClick="onClickSaveImageToDir"/>
     </LinearLayout>
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Test Flight"
+            android:onClick="onClickTestFlight"/>
     </LinearLayout>
 </ScrollView>

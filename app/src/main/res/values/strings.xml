@@ -24,12 +24,13 @@
     <string name="toast_canny_done">Cannied!</string>
     <string name="toast_facedetection_done">Detected <xlif:g example="3" id="toast_facedetection_done">%d</xlif:g> face(s).</string>
     <string name="toast_process_failed">Failed!</string>
-    <string name="toast_shapemodel_404">Shape Model not found, Downloading file now...</string>
+    <string name="toast_shapemodel_404">Shape Model not found, Downloading file now…</string>
     <string name="toast_shapemodel_found">Shape Model found in Downloads Directory</string>
     <string name="toast_shapemodel_found_URI">Shape Model found in Local Directory</string>
-    <string name="toast_shapemodel_downloading">Download in progress...</string>
+    <string name="toast_shapemodel_downloading">Download in progress…</string>
     <string name="toast_shapemodel_downloaded">Shape Model Downloaded successfully</string>
 
     <string name="Dlib_Activity_start">68 Landmarks Detection using dlib!</string>
+    <string name="title_activity_camera">CameraActivity</string>
 
 </resources>

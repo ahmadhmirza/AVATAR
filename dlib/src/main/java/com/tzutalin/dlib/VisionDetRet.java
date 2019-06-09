@@ -56,6 +56,15 @@ public final class VisionDetRet {
         mConfidence = confidence;
     }
 
+    public VisionDetRet(int left, int top, int right, int bottom, String label, float confidence) {
+        this.mLabel = label;
+        this.mLeft = left;
+        this.mTop = top;
+        this.mRight = right;
+        this.mBottom = bottom;
+        this.mConfidence = confidence;
+    }
+
     /**
      * @return The X coordinate of the left side of the result
      */
@@ -120,7 +129,7 @@ public final class VisionDetRet {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Left:");
-        sb.append(mLabel);
+        sb.append(mLeft);
         sb.append(", Top:");
         sb.append(mTop);
         sb.append(", Right:");

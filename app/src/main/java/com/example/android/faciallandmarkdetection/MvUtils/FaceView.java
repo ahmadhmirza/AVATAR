@@ -24,9 +24,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
-import android.widget.Toast;
 
-import com.example.android.faciallandmarkdetection.MvLandmarkDetection;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.Landmark;
 

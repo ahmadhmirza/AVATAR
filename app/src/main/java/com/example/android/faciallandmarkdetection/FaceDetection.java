@@ -33,13 +33,22 @@ public class FaceDetection{
     public Mat src = new Mat();   // Matrix to hold the source image data
     public Bitmap processedImg; // to hold the processed image
     public MatOfRect faceDetections = new MatOfRect();
-    CascadeClassifier classifier;
+    private CascadeClassifier classifier;
 
 
     private Context context;
+    private Rect mRect;
+    private Rect faceRoi;
 
     public FaceDetection(Context current){
         this.context = current;
+    }
+
+    public FaceDetection(Context current, Mat img){
+
+        this.context = current;
+        this. src = img;
+        load_cascade();
     }
 
     /**
@@ -76,11 +85,14 @@ public class FaceDetection{
                         new Scalar(0, 0, 255),                 // RGB colour and thickness of the box
                         4
                 );
+
+                setFaceRoi(rect);
                 timing.addSplit("Face Detection Done...");
                 timing.dumpToLog();
 
 
             }
+
 
             processedImg = Bitmap.createBitmap(src.cols(), src.rows(), Bitmap.Config.ARGB_8888);
             Utils.matToBitmap(src, processedImg);
@@ -88,6 +100,39 @@ public class FaceDetection{
             return processedImg;
         }
 
+    }
+
+    public Mat detectFacefromMatrix() {
+
+        //TimingLogger timing = new TimingLogger("OpenCVTiming", "Processing Time");
+        //load_cascade(); // function to load the cascade classifier.
+        //To handle the cascade classifier being empty
+        //Currently returning a grayscale image instead of an error
+        if (classifier.empty()) {
+            Log.v("OPENCV - CC", "No classifier found");
+            //timing.addSplit("No classifier detection...");
+        } else {
+            classifier.detectMultiScale(src, faceDetections);
+            // to draw rectangles around the detected faces
+            for (Rect rect : faceDetections.toArray()) {
+                Imgproc.rectangle(
+                        src,                                               // where to draw the box
+                        new Point(rect.x, rect.y),                            // bottom left
+                        new Point(rect.x + rect.width, rect.y + rect.height), // top right
+                        new Scalar(0, 0, 255),                 // RGB colour and thickness of the box
+                        4
+                );
+                //timing.addSplit("Face Detection Done...");
+                //timing.dumpToLog();
+                Log.v("detFace" , "Faceeeee detectedddddd");
+            }
+        }
+        return src;
+    }
+
+
+    public MatOfRect getFaceDetections(){
+        return faceDetections;
     }
 
     /**
@@ -127,5 +172,13 @@ public class FaceDetection{
             e.printStackTrace();
             Log.v("MyActivity", "Failed to load cascade. Exception thrown: " + e);
         }
+    }
+
+    public Rect getFaceRoi() {
+        return faceRoi;
+    }
+
+    public void setFaceRoi(Rect faceRoi) {
+        this.faceRoi = faceRoi;
     }
 }
