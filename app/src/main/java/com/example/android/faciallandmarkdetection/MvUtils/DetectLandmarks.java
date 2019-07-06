@@ -43,6 +43,8 @@ import java.util.List;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 
+
+
 public class DetectLandmarks {
     final private static String modelFileName = "shape_predictor_68_face_landmarks.dat";
     final private static String shapePredictorUrl = "https://drive.google.com/uc?authuser=0&id=1IWgPwTyI9BHdAseUqfOHLSuoHpKNMecv&export=download";
@@ -214,7 +216,7 @@ public class DetectLandmarks {
                     Log.d("point 67: ", (landmarks.get(67).x) +", "+
                             (landmarks.get(67).y) );
                     Log.d("Distance 64,67: ",String.format("%.2f", x));
-                    
+
                 }
                 if(i == 69){
 

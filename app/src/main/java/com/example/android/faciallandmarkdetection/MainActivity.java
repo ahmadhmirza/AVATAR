@@ -15,8 +15,15 @@
  *      TODO : Add more checks so the shape model file is not downloaded repeatedly.
  *      TODO : Add dialogue for "processing image" time.
  *      TODO : Update JavaDoc, and arrange code.
+ *      TODO : Normalize lip distance with the eye distance
  *
  *  Ver 3.0
+ *
+ *      TODO: DCT - implementation : Lip ROI - (resize ? ... 32 * 64 image size for lip ROI)
+ *      TODO: Transfer to PC
+ *          TODO: ~ 100 entries from the DCT matrix to PC - ROS implementation ?
+ *          TODO: Hidden Markov Chains/Model
+ *          TODO: ~ 3 - 4 Words/ Numbers
  */
 
 package com.example.android.faciallandmarkdetection;
