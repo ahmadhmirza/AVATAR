@@ -22,4 +22,4 @@ To implement this ROS will be used to have a communication infrastructure. The a
 The LipsROI will be extracted on the client(android device) transfered to the server(PC/rp) using ROS nodes or passing JSON 
 using HTTP/.js in case of rp-server.
 
-The repo named [AVATAR-ROS](https://github.com/ahmadhmirza/Avatar-ROS) contains the implementation for the this second phase of the project where ROS is used for client server communication between the android device and PC running on the same network.
+The repo named [AVATAR-ROS](https://github.com/ahmadhmirza/Avatar-ROS) contains the implementation for this second phase of the project where ROS is used for client server communication between the android device and PC running on the same network.
