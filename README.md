@@ -1,7 +1,7 @@
 # AVATAR
 ## INTRODUCTION
 ###### Project AVATAR - Android application for image processing and Facial Landmarks detection.
-***The project is in fulfilment for Research Seminar(S)[6-ECTs] course in the Master in Embedded Systems for Mechatronics stream @ FH-Dortmund.***
+###### The project is in fulfilment for Research Seminar(S)[6-ECTs] course in the Master in Embedded Systems for Mechatronics stream @ FH-Dortmund.
 
 The Android application takes the frames form the on-board camera of an android device and uses OpenCV and dlib to extract faces
 and lips' region of interest (ROI) from the images. The shared libraries for dlib that I use here are from tzutalin 
