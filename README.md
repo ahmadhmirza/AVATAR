@@ -4,10 +4,8 @@
 ###### The project is in fulfilment for Research Seminar(S)[6-ECTs] course in the Master in Embedded Systems for Mechatronics stream @ FH-Dortmund.
 
 The Android application takes the frames form the on-board camera of an android device and uses OpenCV and dlib to extract faces
-and lips' region of interest (ROI) from the images. The shared libraries for dlib that I use here are from tzutalin 
-```
-_(https://github.com/tzutalin/dlib-android)_
-```
+and lips' region of interest (ROI) from the images. The shared libraries for dlib that I use here are from [Tzutalin](https://github.com/tzutalin/dlib-android)
+
 The input frames with 68 face landmarks drawn on the input image is then returned and shown on screen.
 
 ## Future Work
